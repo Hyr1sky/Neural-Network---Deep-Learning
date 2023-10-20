@@ -6,5 +6,8 @@
 *.tar
 *.tar.gz
 
+# cifar-10-batches-py
+cifar-10-batches-py
+
 # macbook DS_Store
 .DS_Store
