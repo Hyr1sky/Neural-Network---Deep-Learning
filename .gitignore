@@ -1,0 +1,10 @@
+# dataset
+*.csv
+*.jar
+*.war
+*.zip
+*.tar
+*.tar.gz
+
+# macbook DS_Store
+.DS_Store
