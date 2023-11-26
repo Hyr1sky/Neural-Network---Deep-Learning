@@ -32,14 +32,15 @@ def ShowImg(img, idx, type, folder, show):
         plt.imshow(img.permute(1, 2, 0))
         plt.show()
 
-def Progress_LatendCodes(Latend_Codes, Labels):
+def Progress_LatendCodes(Latend_Codes, Labels, show):
     Latend_Codes = np.concatenate(Latend_Codes, axis=0)
     Labels = np.concatenate(Labels, axis=0)
     np.save("./Assignment3/params/Latend_Codes.npy", Latend_Codes)
     np.save("./Assignment3/params/Labels.npy", Labels)
 
-    plt.figure(figsize=(10, 10))
-    plt.scatter(Latend_Codes[:, 0], Latend_Codes[:, 1], c=Labels, cmap='gray', edgecolors='black')
-    plt.colorbar()
-    plt.savefig("./Assignment3/img/LatendCode/Latend_Codes.png")
-    plt.show()
+    if show:
+        plt.figure(figsize=(10, 10))
+        plt.scatter(Latend_Codes[:, 0], Latend_Codes[:, 1], c=Labels, cmap='gray')
+        plt.colorbar()
+        plt.savefig("./Assignment3/img/LatendCode/Latend_Codes.png")
+        plt.show()

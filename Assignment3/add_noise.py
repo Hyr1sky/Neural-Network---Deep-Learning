@@ -12,8 +12,8 @@ class add_noise(nn.Module):
         self.std = std  # std
 
     # generate Gaussian noise
-    def gaussian_noise_layer(self, input_layer, std):
-        noise = torch.normal(mean=0.0, std=std, size=np.shape(input_layer))
+    def gaussian_noise_layer(self, input_layer, std, noise_factor = 0.4):
+        noise = torch.normal(mean=0.0, std=std, size=input_layer.size()) * noise_factor
         if self.config.CUDA:
             noise = noise.to(input_layer.get_device())
         return input_layer + noise

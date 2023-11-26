@@ -43,6 +43,7 @@ class AutoEncoderModel(nn.Module):
             # nn.Sigmoid(),
         )  # Origin 7,7
 
+
         self.conv5 = nn.Sequential(
             nn.ConvTranspose2d(24, 12, 3, 2, 1, output_padding=1),
             nn.BatchNorm2d(12),
@@ -54,18 +55,18 @@ class AutoEncoderModel(nn.Module):
             nn.BatchNorm2d(6),
             nn.ReLU(),
             # nn.Sigmoid(),
-        )
+        )  # N,6,7,7
         self.conv7 = nn.Sequential(
             nn.ConvTranspose2d(6, 3, 3, 2, 1, output_padding=1),
             nn.BatchNorm2d(3),
             nn.ReLU(),
             # nn.Sigmoid(),
-        )  # 14,14
+        )  # N,3,14,14
         self.conv8 = nn.Sequential(
             nn.ConvTranspose2d(3, 1, 3, 2, 1, output_padding=1),
             # nn.ReLU(),
             nn.Sigmoid(),
-        )  # 28.28
+        )  # N,1,28,28
 
         self.resize = nn.Upsample(size=(28, 28), mode='bilinear', align_corners=False)
 
@@ -87,6 +88,7 @@ class AutoEncoderModel(nn.Module):
         y4 = self.conv7(y3)
         out = self.conv8(y4)
         out = self.resize(out)
+        out = torch.clamp(out, 0, 1)
 
         return out
     
@@ -102,7 +104,7 @@ class AutoEncoderModel(nn.Module):
         return code
 
 
-    def generate_from_latent(self, latent_code):
+    def generate_img(self, latent_code):
         with torch.no_grad():
             # Decoder
             y1 = self.fc2(latent_code)
@@ -112,3 +114,4 @@ class AutoEncoderModel(nn.Module):
             y4 = self.conv7(y3)
             generated_image = self.conv8(y4)
         return generated_image
+
