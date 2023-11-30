@@ -20,7 +20,7 @@ class add_noise(nn.Module):
 
     # Normalize the latent code
     def normalize(self, x):
-        pwr = torch.mean(x ** 2) * 2
+        pwr = torch.mean(x ** 2)
         out = x / torch.sqrt(pwr)
         return out
 

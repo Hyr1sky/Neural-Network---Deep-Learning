@@ -15,10 +15,10 @@ from torchvision.utils import save_image
 from torchvision.datasets import MNIST
 
 # Constant
-EPOCH = 10
+EPOCH = 30
 BATCH_SIZE = 100
-LR = 0.002
-WEIGHT_DECAY = 1e-5
+LR = 0.001
+WEIGHT_DECAY = 0
 
 
 class Trainer:
@@ -28,7 +28,7 @@ class Trainer:
         # self.net = AutoEncoderModel().to(self.device)
         # self.net = AE_CNN().to(self.device)
         self.net = AE_MLP().to(self.device)
-        self.loss_fn = nn.BCELoss() # BCE requires the input to be in the range of [0,1]
+        self.loss_fn = nn.MSELoss() # BCE requires the input to be in the range of [0,1]
         self.opt = torch.optim.Adam(self.net.parameters(), lr=LR, weight_decay=WEIGHT_DECAY)
         self.trans = transforms.Compose([transforms.ToTensor(), ])
 
@@ -42,7 +42,7 @@ class Trainer:
         epoch = EPOCH
         batch_size = BATCH_SIZE
 
-        Train_Data = MNIST(root="../Assignment3_dataset", train=True, download=True, transform=self.trans)
+        Train_Data = MNIST(root="./Assignment3_dataset/MNIST", train=True, download=False, transform=self.trans)
         Train_DataLoader = data.DataLoader(dataset=Train_Data, shuffle=True, batch_size=batch_size)
 
         Latend_Codes = []
@@ -89,9 +89,6 @@ class Trainer:
             end_time = time.time()
             print("time cost : {:.3f} s".format(end_time - start_time))
 
-            # Save the model
-            torch.save(self.net.state_dict(), "./Assignment3/params/net.pth")
-
             # Save the reconstructed images
             generative_images = out_img.cpu().data
             real_images = img.cpu().data
@@ -103,6 +100,8 @@ class Trainer:
             save_image(generative_images, "./Assignment3/img/generative_images_{}.png".format(epochs + 1), nrow=10)
             save_image(real_images, "./Assignment3/img/real_images_{}.png".format(epochs + 1), nrow=10)
 
+        # Save the model
+        torch.save(self.net.state_dict(), "./Assignment3/params/net.pth")
         Progress_LatendCodes(Latend_Codes, Labels, False)
 
     def generate(self):
@@ -119,8 +118,8 @@ class Trainer:
 
         # Generate images
         # Set a range of latent codes
-        x = np.linspace(-2.5, 2.5, 10)
-        y = np.linspace(-2.5, 2.5, 10)
+        x = np.linspace(-5, 5, 20)
+        y = np.linspace(-5, 5, 20)
 
         x, y = np.meshgrid(x, y)
         x = x.reshape(-1, 1)
@@ -128,7 +127,7 @@ class Trainer:
         z = np.concatenate((x, y), axis=1)
         z = torch.from_numpy(z).float().to(self.device)
         generated_images = self.net.generate_img(z)
-        save_image(generated_images, "./Assignment3/img/Generate/generated_images.png", nrow=10)
+        save_image(generated_images, "./Assignment3/img/Generate/generated_images.png", nrow=20)
         # ShowImg(generated_images, 0, "generated_images", "Assignment3/img/Generate/", False)
 
             
