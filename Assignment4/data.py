@@ -5,7 +5,7 @@ import torch
 # 加载词表
 def load_vocab():
     word_dict={}
-    with open('/afqmc-vocab/vocab.txt') as f:
+    with open('./Assignment4_dataset/data/vocab.txt') as f:
         for idx,item in enumerate(f.readlines()):
             word_dict[item.strip()]=idx
 
@@ -14,7 +14,7 @@ def load_vocab():
 # 加载数据
 def load_dataset(data_path, is_test):
     examples = []
-    with open('/kaggle/input/afqmcc/dev.json') as f:
+    with open('./Assignment4_dataset/data/AFQMC数据集/dev.json') as f:
         for line in f.readlines():
             line = json.loads(line)
             text_a = line["sentence1"]
